@@ -1,8 +1,7 @@
 <h1 align="center">Completionist</h1>
 
 <p align="center">
-<img width="64" height="64" alt="medivh" src="https://github.com/user-attachments/assets/5e2cb6bf-b0b2-4ef1-bad2-63ffbee7885e" />
-</p>
+<img width="64" height="64" alt="medivh" src="https://github.com/user-attachments/assets/5e2cb6bf-b0b2-4ef1-bad2-63ffbee7885e" style="border-radius: 50%;" /></p>
 
 _<p align="center">Keep track of your progress in Azeroth</p>_
 
