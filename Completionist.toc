@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: Completionist
+## Notes: A simple progress tracker for leveling zones and instances.
+## Author: phytotoma
+## Version: 1.0
+## SavedVariablesPerCharacter: CompletionistDB
+## Website: https://github.com/phytotoma/Completionist
+
+Completionist.lua
