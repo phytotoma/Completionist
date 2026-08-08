@@ -21,6 +21,25 @@ Being a RP nerd, my idea was to make an Addon to plan a lore-friendly leveling r
 * A **User objectives** tab lets you add and keep track of your own objectives.
 * The **Notes** tab serves as a general purpose notepad.
 
+<table style="border-collapse: collapse; border: none; margin: 0 auto;">
+  <tr style="border: none;">
+    <td style="border: none; padding: 0; margin: 0;">
+      <img src="https://github.com/user-attachments/assets/3895cb8e-83b9-4f65-8aad-fbd93c97b8a1" width="683" alt="Picture 1" style="display: block;">
+    </td>
+    <td style="border: none; padding: 0; margin: 0;">
+      <img src="https://github.com/user-attachments/assets/85c91ba5-9bba-456e-a4e4-ad69f3b1afed" width="683" alt="Picture 2" style="display: block;">
+    </td>
+  </tr>
+  <tr style="border: none;">
+    <td style="border: none; padding: 0; margin: 0;">
+      <img src="https://github.com/user-attachments/assets/6b5c3fa7-979c-4ea3-a05b-fa5ae5c3ccfc" width="683" alt="Picture 3" style="display: block;">
+    </td>
+    <td style="border: none; padding: 0; margin: 0;">
+      <img src="https://github.com/user-attachments/assets/aec203e9-fad1-42be-9263-b502b0593fe6" width="683" alt="Picture 4" style="display: block;">
+    </td>
+  </tr>
+</table>
+
 This Addon uses a Persistent Database to save your progress for each character. Everything is safely stored in the `CompletionistDB` across sessions.
 
 ## Usage
