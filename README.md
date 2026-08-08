@@ -10,16 +10,16 @@ _<p align="center">Keep track of your progress in Azeroth</p>_
 
 ## Overview
 
-Being a RP nerd, my idea was to make an Addon to plan a lore-friendly leveling route.
+Being a RP nerd, I wanted to make an Addon to plan a lore-friendly leveling route for my characters.
 
-**Completionist** lets the player make such plans by keeping track of the zones they have cleared, as well as the zones they plan to visit or skip. The percentage of completion adds up in a counter at the bottom.
+**Completionist** lets the player make such plans by keeping track of the zones they have cleared, as well as the zones they plan to visit or skip. The percentage of completion adds up in a counter at the bottom to offer a sense of completion similar to Achievement hunting.
 
 ## Features
 
-* The **Leveling zones** tab features a list of leveling zones sorted by level and faction where you can check the ones you have already cleared and right click the zones you plan to skip. A button at the bottom resets the completion counter.
-* In the **Instances** tab you can accomplish the same for Dungeons, Raids and World Bosses events -- this Addon is best enjoyed with the [mod-individual-progression](https://github.com/ZhengPeiRu21/mod-individual-progression) module for AzerothCore.
-* A **User objectives** tab lets you add and keep track of your own objectives.
-* The **Notes** tab serves as a general purpose notepad.
+* The `Leveling zones` tab features a list of leveling zones sorted by level and faction where you can check out the ones you have already cleared and right click the zones you plan to skip. A button at the bottom lets you reset the completion counter.
+* The `Instances` lets you accomplish the same for Dungeons, Raids and World Bosses events -- this Addon is best enjoyed with the [mod-individual-progression](https://github.com/ZhengPeiRu21/mod-individual-progression) module for AzerothCore, which enables back Vanilla raids and World Bosses events in Wrath of the Lich King.
+* The `User objectives` tab lets you add and keep track of your own custom objectives.
+* The `Notes` tab serves as a general purpose notepad.
 
 <table style="border-collapse: collapse; border: none; margin: 0 auto;">
   <tr style="border: none;">
@@ -53,3 +53,11 @@ or
 ```text
 /comp
 ```
+
+## To Do
+
+* Improve the UI.
+* Add settings for customizing the Addon.
+* Add TBC and WotLK content.
+
+If you have suggestions feel free to reach out at `phytotoma` on Discord.
