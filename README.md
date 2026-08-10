@@ -37,8 +37,6 @@ Being a RP nerd, I wanted to make an Addon to plan a lore-friendly leveling rout
   </tr>
 </table>
 
-This Addon uses a Persistent Database to save your progress for each character. Everything is safely stored in the `CompletionistDB` across sessions.
-
 ## Usage
 
 If for any reason the minimap button fails to load, you can manually launch the Addon with the command:
