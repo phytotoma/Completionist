@@ -59,5 +59,6 @@ or
 * Add settings for customizing the Addon.
 * Add TBC and WotLK content.
 * Add a confirm dialog before resetting the counters.
+* Add the option to bind Completionist in the Key Bindings.
 
 If you have suggestions feel free to reach out at `phytotoma` on Discord.
