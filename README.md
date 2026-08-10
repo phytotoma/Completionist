@@ -60,5 +60,6 @@ or
 * Add TBC and WotLK content.
 * Add a confirm dialog before resetting the counters.
 * Add the option to bind Completionist in the Key Bindings.
+* An option to allow the user to have one aggregated counter (by combining the percentages of completion from Leveling zones, Instances and optionally the custom objectives).
 
 If you have suggestions feel free to reach out at `phytotoma` on Discord.
