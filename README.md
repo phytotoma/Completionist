@@ -43,7 +43,7 @@ This Addon uses a Persistent Database to save your progress for each character. 
 
 ## Usage
 
-If for any reason the minimap button fails to load, you can manually launch the addon with the command:
+If for any reason the minimap button fails to load, you can manually launch the Addon with the command:
 
 ```text
 /completionist
