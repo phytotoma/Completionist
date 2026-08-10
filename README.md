@@ -7,13 +7,11 @@ _<p align="center">Keep track of your progress in Azeroth</p>_
 
 **WARNING: This Addon is intended to be used with the Legacy version of Wrath of the Lich King (3.3.5). This Addon is NOT compatible with Classic Era Wrath of the Lich King**.
 
-## Overview
-
 Being a RP nerd, I wanted to make an Addon to plan a lore-friendly leveling route for my characters.
 
 **Completionist** lets the player make such plans by keeping track of the zones they have cleared, as well as the zones they plan to visit or skip. The percentage of completion adds up in a counter at the bottom to offer a sense of completion similar to Achievement hunting.
 
-## Features
+## Overview
 
 * The `Leveling zones` tab features a list of leveling zones sorted by level and faction where you can check the ones you have already cleared and grey out the zones you plan to skip by right clicking on them. A button at the bottom lets you reset the completion counter.
 * The `Instances` tab lets you accomplish the same for Dungeons, Raids and World Bosses events -- this Addon is best enjoyed with the [mod-individual-progression](https://github.com/ZhengPeiRu21/mod-individual-progression) module for AzerothCore, which enables back Vanilla raids and World Bosses events in Wrath of the Lich King.
