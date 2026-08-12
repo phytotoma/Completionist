@@ -11,10 +11,10 @@ SlashCmdList["COMPLETIONIST"] = function()
 end
 
 local Zones = {
-    {n="Elwynn Forest", l="1-10", f="A"}, {n="Dun Morogh", l="1-10", f="A"}, {n="Teldrassil", l="1-10", f="A"},
-    {n="Durotar", l="1-10", f="H"}, {n="Mulgore", l="1-10", f="H"}, {n="Tirisfal Glades", l="1-10", f="H"},
-    {n="Westfall", l="10-20", f="A"}, {n="Loch Modan", l="10-20", f="A"}, {n="Darkshore", l="10-20", f="A"},
-    {n="Silverpine Forest", l="10-20", f="H"}, {n="The Barrens", l="10-20", f="N"},
+    {n="Elwynn Forest", l="1-10", f="A"}, {n="Dun Morogh", l="1-10", f="A"}, {n="Teldrassil", l="1-10", f="A"}, {n="Azuremyst Isle", l="1-10", f="A", info="TBC zone"},
+    {n="Durotar", l="1-10", f="H"}, {n="Mulgore", l="1-10", f="H"}, {n="Tirisfal Glades", l="1-10", f="H"}, {n="Eversong Woods", l="1-10", f="H", info="TBC zone"},
+    {n="Westfall", l="10-20", f="A"}, {n="Loch Modan", l="10-20", f="A"}, {n="Darkshore", l="10-20", f="A"}, {n="Bloodmyst Isle", l="10-20", f="A", info="TBC zone"},
+    {n="Silverpine Forest", l="10-20", f="H"}, {n="Ghostlands", l="10-20", f="H", info="TBC zone"}, {n="The Barrens", l="10-20", f="N"},
     {n="Redridge Mountains", l="20-30", f="N"}, {n="Duskwood", l="20-30", f="N"}, {n="Wetlands", l="20-30", f="N"},
     {n="Ashenvale", l="20-30", f="N"}, {n="Stonetalon Mountains", l="20-30", f="N"}, {n="Hillsbrad Foothills", l="20-30", f="N"},
     {n="Thousand Needles", l="25-35", f="N"},
@@ -25,10 +25,13 @@ local Zones = {
     {n="The Hinterlands", l="45-50", f="N"},
     {n="Searing Gorge", l="45-55", f="N"}, {n="Azshara", l="45-55", f="N"}, {n="Felwood", l="45-55", f="N"}, {n="Blasted Lands", l="45-55", f="N"}, {n="Un'goro Crater", l="45-55", f="N"},
     {n="Western Plaguelands", l="50-60", f="N"}, {n="Burning Steppes", l="50-60", f="N"},
-    {n="Winterspring", l="55-60", f="N"}, {n="Eastern Plaguelands", l="55-60", f="N"}, {n="Deadwind Pass", l="55-60", f="N"}, {n="Silithus", l="55-60", f="N"}
+    {n="Winterspring", l="55-60", f="N"}, {n="Eastern Plaguelands", l="55-60", f="N"}, {n="Deadwind Pass", l="55-60", f="N"}, {n="Silithus", l="55-60", f="N"},
+    {n="Hellfire Peninsula", l="58-70", f="N", info="TBC zone"}, {n="Zangarmarsh", l="58-70", f="N", info="TBC zone"}, {n="Terokkar Forest", l="58-70", f="N", info="TBC zone"}, {n="Nagrand", l="58-70", f="N", info="TBC zone"}, {n="Blade's Edge Mountains", l="58-70", f="N", info="TBC zone"}, {n="Netherstorm", l="58-70", f="N", info="TBC zone"}, {n="Shadowmoon Valley", l="58-70", f="N", info="TBC zone"},
+    {n="Borean Tundra", l="68-80", f="N", info="WotLK zone"}, {n="Howling Fjord", l="68-80", f="N", info="WotLK zone"}, {n="Dragonblight", l="68-80", f="N", info="WotLK zone"}, {n="Grizzly Hills", l="68-80", f="N", info="WotLK zone"}, {n="Zul'Drak", l="68-80", f="N", info="WotLK zone"}, {n="Sholazar Basin", l="68-80", f="N", info="WotLK zone"}, {n="The Storm Peaks", l="68-80", f="N", info="WotLK zone"}, {n="Icecrown", l="68-80", f="N", info="WotLK zone"}, {n="Crystalsong Forest", l="68-80", f="N", info="WotLK zone"}
 }
 
 local Instances = {
+    -- Classic Dungeons
     {n="Ragefire Chasm", l="13-18"}, {n="Wailing Caverns", l="15-25"}, {n="The Deadmines", l="18-23"},
     {n="Shadowfang Keep", l="22-30"}, {n="The Stockade", l="22-30"}, {n="Blackfathom Deeps", l="24-32"},
     {n="Gnomeregan", l="29-38"}, {n="Razorfen Kraul", l="30-40"}, {n="Scarlet Monastery Graveyard", l="28-38"},
@@ -37,11 +40,31 @@ local Instances = {
     {n="Maraudon Wicked Grotto (Purple)", l="45-53"}, {n="Maraudon Foulspore Cavern (Orange)", l="45-53"}, {n="Maraudon Earth Song Falls (Inner)", l="48-57"},
     {n="The Temple of Atal'Hakkar", l="50-60"}, {n="Blackrock Depths", l="52-60"}, {n="Blackrock Spire Lower", l="55-60"},
     {n="Blackrock Spire Upper", l="58-60"}, {n="Scholomance", l="58-60"}, {n="Stratholme", l="58-60"}, {n="Dire Maul", l="58-60"},
+    {n="Hellfire Ramparts", l="59-62"}, {n="The Blood Furnace", l="60-63"}, {n="The Slave Pens", l="61-64"},
+    {n="The Underbog", l="62-65"}, {n="Mana-Tombs", l="64-66"}, {n="Auchenai Crypts", l="65-67"},
+    {n="The Escape from Durnholde", l="66-68"}, {n="Sethekk Halls", l="67-69"}, {n="Shadow Labyrinth", l="68-70"},
+    {n="The Shattered Halls", l="68-70"}, {n="The Botanica", l="68-70"}, {n="The Mechanar", l="68-70"},
+    {n="The Arcatraz", l="68-70"}, {n="Opening of the Dark Portal", l="69-70"}, {n="Magisters' Terrace", l="70"},
+    {n="Utgarde Keep", l="68-72"}, {n="The Nexus", l="69-73"}, {n="Azjol-Nerub", l="71-74"},
+    {n="Ahn'kahet: The Old Kingdom", l="73-75"}, {n="Drak'Tharon Keep", l="73-76"}, {n="The Violet Hold", l="75-77"},
+    {n="Gundrak", l="76-78"}, {n="Halls of Stone", l="77-79"}, {n="Halls of Lightning", l="79-80"},
+    {n="The Oculus", l="79-80"}, {n="Culling of Stratholme", l="79-80"}, {n="Utgarde Pinnacle", l="79-80"},
+    {n="Trial of the Champion", l="80"}, {n="The Forge of Souls", l="80"}, {n="Pit of Saron", l="80"},
+    {n="Halls of Reflection", l="80"},
     {n="Molten Core", info="40-man raid"}, {n="Onyxia's Lair", info="40-man raid"},
-    {n="Azuregos", info="World Boss"}, {n="Lord Kazzak", info="World Boss"},
+    {n="Azuregos", info="world boss"}, {n="Lord Kazzak", info="world boss"},
     {n="Blackwing Lair", info="40-man raid"}, {n="Zul'Gurub", info="20-man raid"},
-    {n="Dragons of Nightmare", info="World Boss"}, {n="Ruins of Ahn'Qiraj", info="20-man raid"},
-    {n="Temple of Ahn'Qiraj", info="40-man raid"}, {n="Naxxramas", info="40-man raid"}
+    {n="Dragons of Nightmare", info="world boss"}, {n="Ruins of Ahn'Qiraj", info="20-man raid"},
+    {n="Temple of Ahn'Qiraj", info="40-man raid"}, {n="Naxxramas", info="40-man raid"},
+    {n="Doom Lord Kazzak", info="TBC world boss"}, {n="Doomwalker", info="TBC world boss"},
+    {n="Karazhan", info="TBC raid"}, {n="Gruul's Lair", info="TBC raid"}, {n="Magtheridon's Lair", info="TBC raid"},
+    {n="Serpentshrine Cavern", info="TBC raid"}, {n="The Eye", info="TBC raid"}, {n="Battle for Mount Hyjal", info="TBC raid"},
+    {n="Black Temple", info="TBC raid"}, {n="Zul'Aman", info="TBC raid"}, {n="Sunwell Plateau", info="TBC raid"},
+    {n="Vault of Archavon", info="WotLK raid"}, {n="Naxxramas (WotLK)", info="WotLK raid"}, 
+    {n="The Obsidian Sanctum", info="WotLK raid"}, {n="The Eye of Eternity", info="WotLK raid"},
+    {n="Ulduar", info="WotLK raid"}, {n="Trial of the Crusader", info="WotLK raid"},
+    {n="Onyxia's Lair (WotLK)", info="WotLK raid"}, {n="Icecrown Citadel", info="WotLK raid"},
+    {n="The Ruby Sanctum", info="WotLK raid"}
 }
 
 local currentTab = "Zones"
