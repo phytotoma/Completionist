@@ -155,17 +155,31 @@ pctText:SetText("Completion: 0%")
 
 local UpdateList -- forward declaration
 
+-- Setup the confirmation dialog popup
+StaticPopupDialogs["COMPLETIONIST_RESET_CONFIRM"] = {
+    text = "This action will erase all your progress",
+    button1 = "OK",
+    button2 = "Cancel",
+    OnAccept = function()
+        if currentTab == "Zones" then
+            CompletionistDB.Zones = {}
+        elseif currentTab == "Instances" then
+            CompletionistDB.Instances = {}
+        end
+        UpdateList()
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+}
+
 local resetBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 resetBtn:SetSize(75, 22)
 resetBtn:SetPoint("BOTTOMRIGHT", -55, 18)
 resetBtn:SetText("Reset")
 resetBtn:SetScript("OnClick", function()
-    if currentTab == "Zones" then
-        CompletionistDB.Zones = {}
-    elseif currentTab == "Instances" then
-        CompletionistDB.Instances = {}
-    end
-    UpdateList()
+    -- Trigger the confirmation popup instead of instantly resetting
+    StaticPopup_Show("COMPLETIONIST_RESET_CONFIRM")
 end)
 resetBtn:Hide()
 
