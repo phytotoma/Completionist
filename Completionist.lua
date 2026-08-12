@@ -62,10 +62,10 @@ local Instances = {
     {n="Karazhan", info="TBC raid"}, {n="Gruul's Lair", info="TBC raid"}, {n="Magtheridon's Lair", info="TBC raid"},
     {n="Serpentshrine Cavern", info="TBC raid"}, {n="The Eye", info="TBC raid"}, {n="Battle for Mount Hyjal", info="TBC raid"},
     {n="Black Temple", info="TBC raid"}, {n="Zul'Aman", info="TBC raid"}, {n="Sunwell Plateau", info="TBC raid"},
-    {n="Vault of Archavon", info="WotLK raid"}, {n="Naxxramas (WotLK)", info="WotLK raid"}, 
+    {n="Vault of Archavon", info="WotLK raid"}, {n="Naxxramas ", info="WotLK raid"}, 
     {n="The Obsidian Sanctum", info="WotLK raid"}, {n="The Eye of Eternity", info="WotLK raid"},
     {n="Ulduar", info="WotLK raid"}, {n="Trial of the Crusader", info="WotLK raid"},
-    {n="Onyxia's Lair (WotLK)", info="WotLK raid"}, {n="Icecrown Citadel", info="WotLK raid"},
+    {n="Onyxia's Lair ", info="WotLK raid"}, {n="Icecrown Citadel", info="WotLK raid"},
     {n="The Ruby Sanctum", info="WotLK raid"}
 }
 
@@ -155,9 +155,8 @@ local pctText = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 pctText:SetPoint("BOTTOM", 0, 20)
 pctText:SetText("Completion: 0%")
 
-local UpdateList -- forward declaration
+local UpdateList
 
--- Setup the confirmation dialog popup
 StaticPopupDialogs["COMPLETIONIST_RESET_CONFIRM"] = {
     text = "This action will erase all your progress",
     button1 = "OK",
@@ -180,7 +179,6 @@ resetBtn:SetSize(75, 22)
 resetBtn:SetPoint("BOTTOMRIGHT", -55, 18)
 resetBtn:SetText("Reset")
 resetBtn:SetScript("OnClick", function()
-    -- Trigger the confirmation popup instead of instantly resetting
     StaticPopup_Show("COMPLETIONIST_RESET_CONFIRM")
 end)
 resetBtn:Hide()
@@ -585,7 +583,6 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
         CompletionistDB.CustomList = CompletionistDB.CustomList or {}
         CompletionistDB.CustomStates = CompletionistDB.CustomStates or {}
         CompletionistDB.NotesText = CompletionistDB.NotesText or ""
-        -- Minimap Init
         CompletionistDB.Minimap = CompletionistDB.Minimap or { minimapPos = 220 }
         UpdateMinimapButtonPosition()
         
