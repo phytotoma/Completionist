@@ -10,6 +10,9 @@ SlashCmdList["COMPLETIONIST"] = function()
     end
 end
 
+BINDING_HEADER_COMPLETIONIST = "Completionist"
+BINDING_NAME_TOGGLECOMPLETIONIST = "Toggle Completionist Window"
+
 local Zones = {
     {n="Elwynn Forest", l="1-10", f="A"}, {n="Dun Morogh", l="1-10", f="A"}, {n="Teldrassil", l="1-10", f="A"}, {n="Azuremyst Isle", l="1-10", f="A", info="TBC zone"},
     {n="Durotar", l="1-10", f="H"}, {n="Mulgore", l="1-10", f="H"}, {n="Tirisfal Glades", l="1-10", f="H"}, {n="Eversong Woods", l="1-10", f="H", info="TBC zone"},
@@ -31,7 +34,6 @@ local Zones = {
 }
 
 local Instances = {
-    -- Classic Dungeons
     {n="Ragefire Chasm", l="13-18"}, {n="Wailing Caverns", l="15-25"}, {n="The Deadmines", l="18-23"},
     {n="Shadowfang Keep", l="22-30"}, {n="The Stockade", l="22-30"}, {n="Blackfathom Deeps", l="24-32"},
     {n="Gnomeregan", l="29-38"}, {n="Razorfen Kraul", l="30-40"}, {n="Scarlet Monastery Graveyard", l="28-38"},

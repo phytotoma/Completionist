@@ -6,4 +6,5 @@
 ## SavedVariablesPerCharacter: CompletionistDB
 ## Website: https://github.com/phytotoma/Completionist
 
+Bindings.xml
 Completionist.lua

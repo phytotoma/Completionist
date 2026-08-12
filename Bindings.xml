@@ -1,0 +1,9 @@
+<Bindings>
+    <Binding name="TOGGLECOMPLETIONIST" header="COMPLETIONIST">
+        if CompletionistFrame:IsShown() then
+            CompletionistFrame:Hide()
+        else
+            CompletionistFrame:Show()
+        end
+    </Binding>
+</Bindings>
