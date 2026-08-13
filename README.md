@@ -52,10 +52,11 @@ or
 ## To Do
 
 * Improve the UI.
-* Add settings for customizing the Addon.
+* Better icon, add responsiveness to Minimap icon.
+* ~~Add settings for customizing the Addon.~~
 * ~~Add TBC and WotLK content.~~
 * ~~Add a confirm dialog before resetting the counters.~~
 * ~~Add the option to bind Completionist in the Key Bindings.~~
-* An option to allow the user to have one aggregated counter (by combining the percentages of completion from Leveling zones, Instances and optionally the custom objectives).
+* ~~An option to allow the user to have one aggregated counter (by combining the percentages of completion from Leveling zones, Instances and optionally the custom objectives).~~
 
 If you have suggestions feel free to reach out at `phytotoma` on Discord.
