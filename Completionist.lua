@@ -1,4 +1,8 @@
-CompletionistDB = CompletionistDB or { Zones = {}, Instances = {}, CustomList = {}, CustomStates = {}, NotesText = "", Minimap = { minimapPos = 220 } }
+local addonName = ...
+
+CompletionistDB = CompletionistDB or { 
+    Zones = {}, Instances = {}, CustomList = {}, CustomStates = {}, NotesText = "", Minimap = { minimapPos = 220 }, Settings = {} 
+}
 
 SLASH_COMPLETIONIST1 = "/completionist"
 SLASH_COMPLETIONIST2 = "/comp"
@@ -72,6 +76,20 @@ local Instances = {
 local currentTab = "Zones"
 local buttons = {}
 
+local function GetExpansion(info)
+    if not info then return "Classic" end
+    if string.find(info, "TBC") then return "TBC" end
+    if string.find(info, "WotLK") then return "WotLK" end
+    return "Classic"
+end
+
+local function IsExpansionAllowed(info)
+    local settings = CompletionistDB.Settings or {}
+    local exp = GetExpansion(info)
+    if exp ~= "Classic" and settings.showExpansion == false then return false end
+    return true
+end
+
 local function GetCurrentDB()
     if currentTab == "Zones" then
         return CompletionistDB.Zones
@@ -86,12 +104,25 @@ end
 local function GetBracketedZones()
     local list = {}
     local lastLevel = nil
+    local _, playerFaction = UnitFactionGroup("player")
+    local fCode = (playerFaction == "Alliance") and "A" or "H"
+    local settings = CompletionistDB.Settings or {}
+
     for _, zone in ipairs(Zones) do
-        if zone.l ~= lastLevel then
-            lastLevel = zone.l
-            table.insert(list, { isHeader = true, title = lastLevel .. " Bracket" })
+        local include = true
+        
+        if settings.factionFilter and zone.f ~= "N" and zone.f ~= fCode then
+            include = false
         end
-        table.insert(list, zone)
+        if include and not IsExpansionAllowed(zone.info) then include = false end
+        
+        if include then
+            if zone.l ~= lastLevel then
+                lastLevel = zone.l
+                table.insert(list, { isHeader = true, title = lastLevel .. " Bracket" })
+            end
+            table.insert(list, zone)
+        end
     end
     return list
 end
@@ -101,18 +132,20 @@ local function GetGroupedInstances()
     local addedDungeonsHeader = false
     local addedRaidsHeader = false
     for _, inst in ipairs(Instances) do
-        if inst.l then
-            if not addedDungeonsHeader then
-                addedDungeonsHeader = true
-                table.insert(list, { isHeader = true, title = "Dungeons" })
+        if IsExpansionAllowed(inst.info) then
+            if inst.l then
+                if not addedDungeonsHeader then
+                    addedDungeonsHeader = true
+                    table.insert(list, { isHeader = true, title = "Dungeons" })
+                end
+                table.insert(list, inst)
+            else
+                if not addedRaidsHeader then
+                    addedRaidsHeader = true
+                    table.insert(list, { isHeader = true, title = "Raids" })
+                end
+                table.insert(list, inst)
             end
-            table.insert(list, inst)
-        else
-            if not addedRaidsHeader then
-                addedRaidsHeader = true
-                table.insert(list, { isHeader = true, title = "Raids" })
-            end
-            table.insert(list, inst)
         end
     end
     return list
@@ -155,7 +188,7 @@ local pctText = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 pctText:SetPoint("BOTTOM", 0, 20)
 pctText:SetText("Completion: 0%")
 
-local UpdateList
+local UpdateList 
 
 StaticPopupDialogs["COMPLETIONIST_RESET_CONFIRM"] = {
     text = "This action will erase all your progress",
@@ -199,14 +232,6 @@ icon:SetTexture("Interface\\AddOns\\Completionist\\icon")
 icon:SetSize(20, 20)
 icon:SetPoint("TOPLEFT", 7, -6)
 
-if minimapButton.CreateMaskTexture then
-    local mask = minimapButton:CreateMaskTexture()
-    mask:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
-    mask:SetSize(20, 20)
-    mask:SetPoint("TOPLEFT", 7, -6)
-    icon:AddMaskTexture(mask)
-end
-
 local border = minimapButton:CreateTexture(nil, "OVERLAY")
 border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
 border:SetSize(54, 54)
@@ -228,6 +253,12 @@ minimapButton:SetScript("OnClick", function(self, button)
         else
             CompletionistFrame:Show()
         end
+    elseif button == "RightButton" then
+        if not CompletionistFrame:IsShown() then
+            CompletionistFrame:Show()
+        end
+        currentTab = "Settings"
+        UpdateList()
     end
 end)
 
@@ -235,13 +266,12 @@ minimapButton:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
     GameTooltip:SetText("Completionist", 1, 0.82, 0)
     GameTooltip:AddLine("Left-click to toggle window.", 1, 1, 1)
+    GameTooltip:AddLine("Right-click to open settings.", 1, 1, 1)
     GameTooltip:AddLine("Drag to move button.", 0.7, 0.7, 0.7)
     GameTooltip:Show()
 end)
 
-minimapButton:SetScript("OnLeave", function()
-    GameTooltip:Hide()
-end)
+minimapButton:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
 minimapButton:SetScript("OnDragStart", function(self)
     self:SetScript("OnUpdate", function(self)
@@ -254,10 +284,7 @@ minimapButton:SetScript("OnDragStart", function(self)
         UpdateMinimapButtonPosition()
     end)
 end)
-
-minimapButton:SetScript("OnDragStop", function(self)
-    self:SetScript("OnUpdate", nil)
-end)
+minimapButton:SetScript("OnDragStop", function(self) self:SetScript("OnUpdate", nil) end)
 minimapButton:RegisterForDrag("LeftButton")
 
 local editBox = CreateFrame("EditBox", "CompletionistCustomInput", f, "InputBoxTemplate")
@@ -291,10 +318,7 @@ addBtn:SetScript("OnClick", function()
     end
 end)
 addBtn:Hide()
-
-editBox:SetScript("OnEnterPressed", function()
-    addBtn:GetScript("OnClick")(addBtn)
-end)
+editBox:SetScript("OnEnterPressed", function() addBtn:GetScript("OnClick")(addBtn) end)
 
 local scrollFrame = CreateFrame("ScrollFrame", "CompletionistScrollFrame", f, "UIPanelScrollFrameTemplate")
 scrollFrame:SetPoint("TOPLEFT", 15, -70)
@@ -321,9 +345,7 @@ notesBg:SetBackdrop({
 notesBg:SetBackdropColor(0.05, 0.05, 0.05, 0.85)
 notesBg:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
 notesBg:EnableMouse(true)
-notesBg:SetScript("OnMouseDown", function()
-    CompletionistNotesEditBox:SetFocus()
-end)
+notesBg:SetScript("OnMouseDown", function() CompletionistNotesEditBox:SetFocus() end)
 notesBg:Hide()
 
 local notesEditBox = CreateFrame("EditBox", "CompletionistNotesEditBox", notesScroll)
@@ -337,28 +359,251 @@ notesEditBox:SetScript("OnTextChanged", function(self)
     CompletionistDB.NotesText = self:GetText()
     self:SetHeight(math.max(notesScroll:GetHeight(), self:GetTextHeight() + 20))
 end)
-notesEditBox:SetScript("OnEscapePressed", function(self)
-    self:ClearFocus()
-end)
+notesEditBox:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
 notesScroll:SetScrollChild(notesEditBox)
+notesScroll:SetScript("OnMouseDown", function() notesEditBox:SetFocus() end)
 
-notesScroll:SetScript("OnMouseDown", function()
-    notesEditBox:SetFocus()
+local settingsContainer = CreateFrame("Frame", nil, f)
+settingsContainer:SetPoint("TOPLEFT", 25, -75)
+settingsContainer:SetPoint("BOTTOMRIGHT", -25, 45)
+settingsContainer:Hide()
+
+local function CreateSettingCheckbox(parent, label, x, y, dbKey, onClickFunc)
+    local cb = CreateFrame("CheckButton", nil, parent, "UICheckButtonTemplate")
+    cb:SetSize(24, 24)
+    cb:SetPoint("TOPLEFT", x, y)
+    local text = cb:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    text:SetPoint("LEFT", cb, "RIGHT", 4, 0)
+    text:SetText(label)
+    cb:SetScript("OnClick", function(self)
+        CompletionistDB.Settings = CompletionistDB.Settings or {}
+        CompletionistDB.Settings[dbKey] = self:GetChecked() and true or false
+        if onClickFunc then onClickFunc(CompletionistDB.Settings[dbKey]) end
+    end)
+    return cb, text
+end
+
+local function CreateTransparencySetting(parent, x, y)
+    local container = CreateFrame("Frame", "CompletionistTransparencyContainer", parent)
+    container:SetSize(340, 45)
+    container:SetPoint("TOPLEFT", x, y)
+
+    local txt = container:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    txt:SetPoint("TOPLEFT", container, "TOPLEFT", 0, 0)
+    txt:SetText("Transparency")
+
+    local bar = CreateFrame("Button", nil, container)
+    bar:SetSize(140, 14) 
+    bar:SetPoint("TOPLEFT", container, "TOPLEFT", 0, -20)
+    bar:EnableMouse(true)
+    bar:EnableMouseWheel(true) 
+    bar:SetBackdrop({
+        bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true, tileSize = 16, edgeSize = 12,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 }
+    })
+    bar:SetBackdropColor(0.1, 0.1, 0.1, 1)
+    bar:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
+
+    local bg = bar:CreateTexture(nil, "BACKGROUND")
+    bg:SetTexture("Interface\\Buttons\\UI-SliderBar-Background")
+    bg:SetSize(130, 8)
+    bg:SetPoint("CENTER")
+
+    local thumb = CreateFrame("Button", nil, bar)
+    thumb:SetSize(16, 24)
+    thumb:SetMovable(true)
+
+    local thumbTex = thumb:CreateTexture(nil, "ARTWORK")
+    thumbTex:SetTexture("Interface\\Buttons\\UI-SliderBar-Button-Horizontal")
+    thumbTex:SetSize(32, 32)
+    thumbTex:SetPoint("CENTER")
+
+    local editBox = CreateFrame("EditBox", "CompletionistAlphaEditBox", container, "InputBoxTemplate")
+    editBox:SetSize(45, 20)
+    editBox:SetPoint("LEFT", bar, "RIGHT", 10, 0)
+    editBox:SetAutoFocus(false)
+    editBox:SetMaxLetters(4)
+
+    local resetBtn = CreateFrame("Button", nil, container, "UIPanelButtonTemplate")
+    resetBtn:SetSize(55, 22)
+    resetBtn:SetPoint("LEFT", editBox, "RIGHT", 8, 0)
+    resetBtn:SetText("Reset")
+
+    local minV, maxV, step = 0.1, 1.0, 0.05
+
+    local function GetValueFromX(mouseX)
+        local barLeft = bar:GetLeft()
+        local barWidth = bar:GetWidth()
+        if not barLeft or not barWidth or barWidth == 0 then return minV end
+        local pct = (mouseX - barLeft) / barWidth
+        pct = math.max(0, math.min(1, pct))
+        local val = minV + pct * (maxV - minV)
+        local mult = 1 / step
+        return math.floor(val * mult + 0.5) / mult
+    end
+
+    local function ApplyValue(val)
+        val = math.max(minV, math.min(maxV, val))
+        local mult = 1 / step
+        val = math.floor(val * mult + 0.5) / mult
+
+        CompletionistDB.Settings = CompletionistDB.Settings or {}
+        CompletionistDB.Settings.alpha = val
+        f:SetBackdropColor(0.05, 0.05, 0.05, val)
+
+        local pct = (val - minV) / (maxV - minV)
+        local barWidth = bar:GetWidth()
+        if barWidth == 0 then barWidth = 140 end
+        thumb:SetPoint("CENTER", bar, "LEFT", pct * barWidth, 0)
+
+        if not editBox:HasFocus() then
+            editBox:SetText(string.format("%.2f", val))
+        end
+    end
+
+    bar:SetScript("OnMouseDown", function(self, button)
+        if button == "LeftButton" then
+            local cursorX = GetCursorPosition() / UIParent:GetEffectiveScale()
+            ApplyValue(GetValueFromX(cursorX))
+        end
+    end)
+    
+    bar:SetScript("OnMouseWheel", function(self, delta)
+        local currentVal = CompletionistDB.Settings.alpha or 0.85
+        ApplyValue(currentVal + (delta * step))
+    end)
+
+    thumb:RegisterForDrag("LeftButton")
+    thumb:SetScript("OnDragStart", function(self)
+        self:SetScript("OnUpdate", function()
+            local cursorX = GetCursorPosition() / UIParent:GetEffectiveScale()
+            ApplyValue(GetValueFromX(cursorX))
+        end)
+    end)
+    thumb:SetScript("OnDragStop", function(self)
+        self:SetScript("OnUpdate", nil)
+    end)
+
+    editBox:SetScript("OnEnterPressed", function(self)
+        local text = self:GetText()
+        local num = tonumber(text)
+        if num then
+            ApplyValue(num)
+        else
+            local cur = CompletionistDB.Settings.alpha or 0.85
+            self:SetText(string.format("%.2f", cur))
+        end
+        self:ClearFocus()
+    end)
+
+    editBox:SetScript("OnEditFocusLost", function(self)
+        local text = self:GetText()
+        local num = tonumber(text)
+        if num then
+            ApplyValue(num)
+        else
+            local cur = CompletionistDB.Settings.alpha or 0.85
+            self:SetText(string.format("%.2f", cur))
+        end
+    end)
+
+    resetBtn:SetScript("OnClick", function()
+        ApplyValue(0.85)
+    end)
+
+    container.SetValue = function(_, val)
+        ApplyValue(val or 0.85)
+    end
+
+    return container
+end
+
+local headerBehavior = settingsContainer:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+headerBehavior:SetPoint("TOPLEFT", 0, 0)
+headerBehavior:SetText("Behavior:")
+
+local cbFactionColors = CreateSettingCheckbox(settingsContainer, "Enable faction colors", 5, -25, "factionColors")
+local cbFactionFilter = CreateSettingCheckbox(settingsContainer, "Filter by faction", 5, -50, "factionFilter")
+local cbShowExpansion = CreateSettingCheckbox(settingsContainer, "Show expansion content", 20, -75, "showExpansion")
+local cbCombinedProg, cbCombinedProgText = CreateSettingCheckbox(settingsContainer, "Combined progression", 5, -100, "combinedProg")
+
+local combinedProgInfoBtn = CreateFrame("Button", nil, settingsContainer)
+combinedProgInfoBtn:SetSize(16, 16)
+combinedProgInfoBtn:SetPoint("LEFT", cbCombinedProgText, "RIGHT", 8, 0)
+
+local combinedProgInfoTex = combinedProgInfoBtn:CreateTexture(nil, "ARTWORK")
+combinedProgInfoTex:SetAllPoints()
+combinedProgInfoTex:SetTexture("Interface\\FriendsFrame\\InformationIcon")
+
+combinedProgInfoBtn:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:SetText("Combine the percentage of completion from the Zone and Instances tab", 1, 1, 1)
+    GameTooltip:Show()
 end)
+combinedProgInfoBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+local headerApp = settingsContainer:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+headerApp:SetPoint("TOPLEFT", 0, -140)
+headerApp:SetText("Appearance:")
+
+local cbHideMinimap = CreateSettingCheckbox(settingsContainer, "Hide Minimap button", 5, -165, "hideMinimap", function(val)
+    if val then minimapButton:Hide() else minimapButton:Show() end
+end)
+local cbLockWindow = CreateSettingCheckbox(settingsContainer, "Lock window position", 5, -190, "lockWindow", function(val)
+    f:SetMovable(not val)
+end)
+
+local sliderAlpha = CreateTransparencySetting(settingsContainer, 15, -230)
+
+local function GetCompletionStats(dataList, db)
+    local t, c, s = 0, 0, 0
+    for _, data in ipairs(dataList) do
+        if not data.isHeader then
+            t = t + 1
+            local state = db[data.n] or 0
+            if state == 1 then c = c + 1 elseif state == 2 then s = s + 1 end
+        end
+    end
+    return t, c, s
+end
 
 UpdateList = function()
+    local settings = CompletionistDB.Settings or {}
+
     if currentTab == "Notes" then
         scrollFrame:Hide()
         editBox:Hide()
         addBtn:Hide()
         resetBtn:Hide()
+        settingsContainer:Hide()
         notesScroll:Show()
         notesBg:Show()
         pctText:Hide()
         notesEditBox:SetWidth(notesScroll:GetWidth() - 20)
         notesEditBox:SetText(CompletionistDB.NotesText or "")
         return
+    elseif currentTab == "Settings" then
+        scrollFrame:Hide()
+        editBox:Hide()
+        addBtn:Hide()
+        resetBtn:Hide()
+        notesScroll:Hide()
+        notesBg:Hide()
+        pctText:Hide()
+        settingsContainer:Show()
+        
+        cbFactionColors:SetChecked(settings.factionColors)
+        cbFactionFilter:SetChecked(settings.factionFilter)
+        cbShowExpansion:SetChecked(settings.showExpansion)
+        cbCombinedProg:SetChecked(settings.combinedProg)
+        cbHideMinimap:SetChecked(settings.hideMinimap)
+        cbLockWindow:SetChecked(settings.lockWindow)
+        sliderAlpha:SetValue(settings.alpha or 0.85)
+        return
     else
+        settingsContainer:Hide()
         notesScroll:Hide()
         notesBg:Hide()
         pctText:Show()
@@ -431,15 +676,12 @@ UpdateList = function()
 
             local delBtn = CreateFrame("Button", nil, btn, "UIPanelCloseButton")
             delBtn:SetSize(22, 22)
-            
             delBtn:SetScript("OnClick", function()
                 if currentTab == "Custom" and btn.dataName then
                     for idx, name in ipairs(CompletionistDB.CustomList) do
                         if name == btn.dataName then
                             table.remove(CompletionistDB.CustomList, idx)
-                            if CompletionistDB.CustomStates then
-                                CompletionistDB.CustomStates[name] = nil
-                            end
+                            if CompletionistDB.CustomStates then CompletionistDB.CustomStates[name] = nil end
                             break
                         end
                     end
@@ -447,7 +689,6 @@ UpdateList = function()
                 end
             end)
             btn.delBtn = delBtn
-            
             buttons[i] = btn
         end
 
@@ -466,14 +707,15 @@ UpdateList = function()
             btn.text:SetPoint("LEFT", btn.cb, "RIGHT", 4, 0)
             btn.text:SetFont("Fonts\\FRIZQT__.TTF", 13)
 
-            local name, info, level
+            local name, info, level, faction
             if currentTab == "Custom" then
                 name = data
-                info, level = nil, nil
+                info, level, faction = nil, nil, nil
             else
                 name = data.n
                 info = data.info
                 level = data.l
+                faction = data.f
             end
 
             btn.dataName = name
@@ -511,9 +753,24 @@ UpdateList = function()
 
             local db = GetCurrentDB()
             local state = db[name] or 0
+
+            local defR, defG, defB = 1, 0.82, 0
+            if currentTab == "Zones" and settings.factionColors then
+                if faction == "A" then defR, defG, defB = 0.2, 0.6, 1
+                elseif faction == "H" then defR, defG, defB = 1, 0.2, 0.2 end
+            end
+
             if state == 1 then
                 btn.cb:SetChecked(true)
-                btn.text:SetTextColor(0.9, 0.65, 0)
+                if currentTab == "Zones" and (faction == "A" or faction == "H") then
+                    if faction == "A" then
+                        btn.text:SetTextColor(0.1, 0.35, 0.6)
+                    else
+                        btn.text:SetTextColor(0.6, 0.1, 0.1)
+                    end
+                else
+                    btn.text:SetTextColor(0.9, 0.65, 0)
+                end
                 completed = completed + 1
             elseif state == 2 then
                 btn.cb:SetChecked(false)
@@ -521,11 +778,10 @@ UpdateList = function()
                 skipped = skipped + 1
             else
                 btn.cb:SetChecked(false)
-                btn.text:SetTextColor(1, 0.82, 0) 
+                btn.text:SetTextColor(defR, defG, defB) 
             end
             total = total + 1
         end
-
         btn:Show()
     end
 
@@ -535,56 +791,80 @@ UpdateList = function()
 
     local validTotal = total - skipped
     local pct = validTotal > 0 and (completed / validTotal * 100) or 0
+
+    if (currentTab == "Zones" or currentTab == "Instances") and settings.combinedProg then
+        local zT, zC, zS = GetCompletionStats(GetBracketedZones(), CompletionistDB.Zones)
+        local iT, iC, iS = GetCompletionStats(GetGroupedInstances(), CompletionistDB.Instances)
+        
+        local combValidTotal = (zT + iT) - (zS + iS)
+        pct = combValidTotal > 0 and ((zC + iC) / combValidTotal * 100) or 0
+    end
+
     pctText:SetText(string.format("Completion: %.1f%%", pct))
 end
 
 local tab1 = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-tab1:SetSize(108, 25)
+tab1:SetSize(90, 25)
 tab1:SetPoint("TOPLEFT", 15, -40)
-tab1:SetText("Leveling zones")
-tab1:SetScript("OnClick", function()
-    currentTab = "Zones"
-    UpdateList()
-end)
+tab1:SetText("Zones")
+tab1:SetScript("OnClick", function() currentTab = "Zones"; UpdateList() end)
 
 local tab2 = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-tab2:SetSize(78, 25)
+tab2:SetSize(75, 25)
 tab2:SetPoint("LEFT", tab1, "RIGHT", 4, 0)
 tab2:SetText("Instances")
-tab2:SetScript("OnClick", function()
-    currentTab = "Instances"
-    UpdateList()
-end)
+tab2:SetScript("OnClick", function() currentTab = "Instances"; UpdateList() end)
 
 local tab3 = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-tab3:SetSize(118, 25)
+tab3:SetSize(85, 25)
 tab3:SetPoint("LEFT", tab2, "RIGHT", 4, 0)
-tab3:SetText("User objectives")
-tab3:SetScript("OnClick", function()
-    currentTab = "Custom"
-    UpdateList()
-end)
+tab3:SetText("Objectives")
+tab3:SetScript("OnClick", function() currentTab = "Custom"; UpdateList() end)
 
 local tab4 = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-tab4:SetSize(64, 25)
+tab4:SetSize(55, 25)
 tab4:SetPoint("LEFT", tab3, "RIGHT", 4, 0)
 tab4:SetText("Notes")
-tab4:SetScript("OnClick", function()
-    currentTab = "Notes"
-    UpdateList()
-end)
+tab4:SetScript("OnClick", function() currentTab = "Notes"; UpdateList() end)
+
+local tab5 = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+tab5:SetSize(65, 25)
+tab5:SetPoint("LEFT", tab4, "RIGHT", 4, 0)
+tab5:SetText("Settings")
+tab5:SetScript("OnClick", function() currentTab = "Settings"; UpdateList() end)
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:SetScript("OnEvent", function(self, event, arg1)
-    if arg1 == "Completionist" then
+    if arg1 == addonName then
         CompletionistDB.Zones = CompletionistDB.Zones or {}
         CompletionistDB.Instances = CompletionistDB.Instances or {}
         CompletionistDB.CustomList = CompletionistDB.CustomList or {}
         CompletionistDB.CustomStates = CompletionistDB.CustomStates or {}
         CompletionistDB.NotesText = CompletionistDB.NotesText or ""
         CompletionistDB.Minimap = CompletionistDB.Minimap or { minimapPos = 220 }
+        CompletionistDB.Settings = CompletionistDB.Settings or {}
+        
+        local defSettings = {
+            factionColors = false,
+            factionFilter = false,
+            showExpansion = true,
+            combinedProg = false,
+            hideMinimap = false,
+            lockWindow = false,
+            alpha = 0.85
+        }
+        for k, v in pairs(defSettings) do
+            if CompletionistDB.Settings[k] == nil then
+                CompletionistDB.Settings[k] = v
+            end
+        end
+
         UpdateMinimapButtonPosition()
+        
+        if CompletionistDB.Settings.hideMinimap then minimapButton:Hide() end
+        f:SetBackdropColor(0.05, 0.05, 0.05, CompletionistDB.Settings.alpha)
+        f:SetMovable(not CompletionistDB.Settings.lockWindow)
         
         UpdateList()
     end
