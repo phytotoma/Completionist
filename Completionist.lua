@@ -762,7 +762,7 @@ UpdateList = function()
 
             if state == 1 then
                 btn.cb:SetChecked(true)
-                if currentTab == "Zones" and (faction == "A" or faction == "H") then
+                if currentTab == "Zones" and settings.factionColors and (faction == "A" or faction == "H") then
                     if faction == "A" then
                         btn.text:SetTextColor(0.1, 0.35, 0.6)
                     else
