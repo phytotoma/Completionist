@@ -21,18 +21,18 @@ Being a RP nerd, I wanted to make an Addon to plan a lore-friendly leveling rout
 <table style="border-collapse: collapse; border: none; margin: 0 auto;">
   <tr style="border: none;">
     <td style="border: none; padding: 0; margin: 0;">
-      <img src="https://github.com/user-attachments/assets/3895cb8e-83b9-4f65-8aad-fbd93c97b8a1" width="683" alt="Picture 1" style="display: block;">
+      <img src="https://i.imgur.com/fAAPU46.jpeg" width="683" alt="Picture 1" style="display: block;">
     </td>
     <td style="border: none; padding: 0; margin: 0;">
-      <img src="https://github.com/user-attachments/assets/85c91ba5-9bba-456e-a4e4-ad69f3b1afed" width="683" alt="Picture 2" style="display: block;">
+      <img src="https://i.imgur.com/GW5LJCo.jpeg" width="683" alt="Picture 2" style="display: block;">
     </td>
   </tr>
   <tr style="border: none;">
     <td style="border: none; padding: 0; margin: 0;">
-      <img src="https://github.com/user-attachments/assets/6b5c3fa7-979c-4ea3-a05b-fa5ae5c3ccfc" width="683" alt="Picture 3" style="display: block;">
+      <img src="https://i.imgur.com/jSgpTWE.jpeg" width="683" alt="Picture 3" style="display: block;">
     </td>
     <td style="border: none; padding: 0; margin: 0;">
-      <img src="https://github.com/user-attachments/assets/aec203e9-fad1-42be-9263-b502b0593fe6" width="683" alt="Picture 4" style="display: block;">
+      <img src="https://i.imgur.com/ekzFEz4.jpeg" width="683" alt="Picture 4" style="display: block;">
     </td>
   </tr>
 </table>
@@ -51,12 +51,14 @@ or
 
 ## To Do
 
-* Improve the UI.
-* Better icon, add responsiveness to Minimap icon.
+* Rework the UI.
+* Add a clearer responsive Minimap icon.
+* Make the categories collapsible.
+* Add a search bar.
 * ~~Add settings for customizing the Addon.~~
 * ~~Add TBC and WotLK content.~~
 * ~~Add a confirm dialog before resetting the counters.~~
 * ~~Add the option to bind Completionist in the Key Bindings.~~
-* ~~An option to allow the user to have one aggregated counter (by combining the percentages of completion from Leveling zones, Instances and optionally the custom objectives).~~
+* ~~An option to allow the user to have one aggregated counter.~~
 
 If you have suggestions feel free to reach out at `phytotoma` on Discord.
