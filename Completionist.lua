@@ -86,7 +86,7 @@ end
 local function IsExpansionAllowed(info)
     local settings = CompletionistDB.Settings or {}
     local exp = GetExpansion(info)
-    if exp ~= "Classic" and settings.showExpansion == false then return false end
+    if exp ~= "Classic" and settings.hideExpansion then return false end
     return true
 end
 
@@ -526,7 +526,7 @@ headerBehavior:SetText("Behavior:")
 
 local cbFactionColors = CreateSettingCheckbox(settingsContainer, "Enable faction colors", 5, -25, "factionColors")
 local cbFactionFilter = CreateSettingCheckbox(settingsContainer, "Filter by faction", 5, -50, "factionFilter")
-local cbShowExpansion = CreateSettingCheckbox(settingsContainer, "Show expansion content", 20, -75, "showExpansion")
+local cbHideExpansion = CreateSettingCheckbox(settingsContainer, "Hide expansion content", 5, -75, "hideExpansion")
 local cbCombinedProg, cbCombinedProgText = CreateSettingCheckbox(settingsContainer, "Combined progression", 5, -100, "combinedProg")
 
 local combinedProgInfoBtn = CreateFrame("Button", nil, settingsContainer)
@@ -596,7 +596,7 @@ UpdateList = function()
         
         cbFactionColors:SetChecked(settings.factionColors)
         cbFactionFilter:SetChecked(settings.factionFilter)
-        cbShowExpansion:SetChecked(settings.showExpansion)
+        cbHideExpansion:SetChecked(settings.hideExpansion)
         cbCombinedProg:SetChecked(settings.combinedProg)
         cbHideMinimap:SetChecked(settings.hideMinimap)
         cbLockWindow:SetChecked(settings.lockWindow)
@@ -848,7 +848,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
         local defSettings = {
             factionColors = false,
             factionFilter = false,
-            showExpansion = true,
+            hideExpansion = false,
             combinedProg = false,
             hideMinimap = false,
             lockWindow = false,
