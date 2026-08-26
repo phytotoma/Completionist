@@ -15,7 +15,7 @@ Being a RP nerd, I wanted to make an Addon to plan a lore-friendly leveling rout
 
 * The `Zones` tab features a list of leveling zones sorted by level and faction where you can check the ones you have already cleared and grey out the zones you plan to skip by right clicking on them. A button at the bottom lets you reset the completion counter.
 * The `Instances` tab lets you accomplish the same for Dungeons, Raids and World Bosses events -- this Addon is best enjoyed with the [mod-individual-progression](https://github.com/ZhengPeiRu21/mod-individual-progression) module for AzerothCore, which enables back Vanilla raids and World Bosses events in Wrath of the Lich King.
-* The `User objectives` tab lets you add and keep track of your own custom objectives.
+* The `Custom` tab lets you add and keep track of your own custom objectives.
 * The `Notes` tab serves as a general purpose notepad.
 
 <table style="border-collapse: collapse; border: none; margin: 0 auto;">
